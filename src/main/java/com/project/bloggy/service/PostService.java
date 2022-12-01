@@ -1,7 +1,6 @@
 package com.project.bloggy.service;
 
 import com.project.bloggy.dto.PostDTO;
-import com.project.bloggy.entity.User;
 
 import java.util.List;
 
@@ -17,9 +16,9 @@ public interface PostService {
 
     PostDTO getPostById(Long postId);
 
-    List<PostDTO> getPostsByLabelId(Double categoryId);
+    List<PostDTO> getPostsByLabelId(Long labelId);
 
-    List<PostDTO> getPostsByUserId(User userId);
+    List<PostDTO> getPostsByUserId(Long userId);
 
     List<PostDTO> searchPosts(String keyword);
 

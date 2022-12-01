@@ -40,9 +40,7 @@ public class PostServiceImpl implements PostService {
         post.setUser(user);
         post.setLabel(label);
         Post savedPost = this.postRepository.save(post);
-        PostDTO savedPostDTO = this.postToDto(savedPost);
-        savedPostDTO.setAddedDate(savedPost.getCreatedTimestamp());
-        return savedPostDTO;
+        return this.postToDto(savedPost);
     }
 
     @Override
@@ -75,14 +73,15 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDTO> getPostsByLabelId(Double labelId) {
-//        this.postRepository.findByLabel()
-        return null;
+    public List<PostDTO> getPostsByLabelId(Long labelId) {
+        Label label = this.labelRepository.findById(labelId).orElseThrow(() -> new ResourceNotFoundException("Label", "labelId", labelId));
+        return this.postRepository.findByLabel(label).stream().map(this::postToDto).collect(Collectors.toList());
     }
 
     @Override
-    public List<PostDTO> getPostsByUserId(User userId) {
-        return null;
+    public List<PostDTO> getPostsByUserId(Long userId) {
+        User user = this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User", "userId", userId));
+        return this.postRepository.findByUser(user).stream().map(this::postToDto).collect(Collectors.toList());
     }
 
     @Override

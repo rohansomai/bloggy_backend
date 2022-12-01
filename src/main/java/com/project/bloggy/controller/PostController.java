@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/")
@@ -24,4 +25,41 @@ public class PostController {
         PostDTO postDto = this.postService.createPost(postDTO, userId, labelId);
         return new ResponseEntity<>(new ApiResponse("Post created successfully", postDto), HttpStatus.CREATED);
     }
+
+    @GetMapping("/users/{userId}/posts")
+    public ResponseEntity<ApiResponse> getPostByUser(@PathVariable Long userId) {
+        List<PostDTO> postsByUser = this.postService.getPostsByUserId(userId);
+        return new ResponseEntity<>(new ApiResponse("Posts list fetched successfully", postsByUser), HttpStatus.OK);
+    }
+
+    @GetMapping("/labels/{labelId}/posts")
+    public ResponseEntity<ApiResponse> getPostByLabel(@PathVariable Long labelId) {
+        List<PostDTO> postsByLabel = this.postService.getPostsByLabelId(labelId);
+        return new ResponseEntity<>(new ApiResponse("Posts list fetched successfully", postsByLabel), HttpStatus.OK);
+    }
+
+    @PutMapping("/posts/{postId}")
+    public ResponseEntity<ApiResponse> updatePost(@PathVariable Long postId, @RequestBody PostDTO postDTO) {
+        PostDTO updatedPost = this.postService.updatePost(postDTO, postId);
+        return new ResponseEntity<>(new ApiResponse("Post updated successfully", updatedPost), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/posts/{postId}")
+    public ResponseEntity<ApiResponse> deletePost(@PathVariable Long postId) {
+        this.postService.deletePost(postId);
+        return new ResponseEntity<>(new ApiResponse("Post deleted successfully", null), HttpStatus.OK);
+    }
+
+    @GetMapping("/posts/{postId}")
+    public ResponseEntity<ApiResponse> getPostById(@PathVariable Long postId) {
+        PostDTO postDTO = this.postService.getPostById(postId);
+        return new ResponseEntity<>(new ApiResponse("Post fetched successfully", postDTO), HttpStatus.OK);
+    }
+
+    @GetMapping("/posts")
+    public ResponseEntity<ApiResponse> getAllPosts() {
+        List<PostDTO> allPosts = this.postService.getAllPosts();
+        return new ResponseEntity<>(new ApiResponse("Posts list fetched successfully", allPosts), HttpStatus.OK);
+    }
+
 }

@@ -1,7 +1,5 @@
 package com.project.bloggy.dto;
 
-import com.project.bloggy.entity.Label;
-import com.project.bloggy.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +24,9 @@ public class PostDTO {
 
     private String location;
 
-    private Date addedDate;
+    private Date createdTimestamp;
+
+    private Date modifiedTimestamp;
 
     private LabelDTO label;
 
