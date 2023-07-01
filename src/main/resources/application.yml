@@ -3,7 +3,7 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://13.234.33.37:5432/bloggy_db
+    url: jdbc:postgresql://15.206.91.143:5432/bloggy_db
     username: postgres
     password: rootPassword
     driver-class-name: org.postgresql.Driver
