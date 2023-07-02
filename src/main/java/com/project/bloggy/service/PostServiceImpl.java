@@ -1,6 +1,7 @@
 package com.project.bloggy.service;
 
 import com.project.bloggy.dto.PostDTO;
+import com.project.bloggy.dto.PostResponse;
 import com.project.bloggy.entity.Label;
 import com.project.bloggy.entity.Post;
 import com.project.bloggy.entity.User;
@@ -9,6 +10,10 @@ import com.project.bloggy.repository.LabelRepository;
 import com.project.bloggy.repository.PostRepository;
 import com.project.bloggy.repository.UserRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -61,9 +66,24 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDTO> getAllPosts() {
-        List<Post> allPostsList = this.postRepository.findAll();
-        return allPostsList.stream().map(this::postToDto).collect(Collectors.toList());
+    public PostResponse getAllPosts(Integer pageNumber, Integer pageSize, String sortBy, String sortType) {
+        Sort sort;
+        if (sortType.equalsIgnoreCase("asc")) {
+            sort = Sort.by(sortBy).ascending();
+        } else {
+            sort = Sort.by(sortBy).descending();
+        }
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
+        Page<Post> postsByPage = this.postRepository.findAll(pageable);
+        List<Post> postsList = postsByPage.getContent();
+        PostResponse postResponse = new PostResponse();
+        postResponse.setPostsList(postsList.stream().map(this::postToDto).collect(Collectors.toList()));
+        postResponse.setLastPage(postsByPage.isLast());
+        postResponse.setPageNumber(postsByPage.getNumber());
+        postResponse.setPageSize(postsByPage.getSize());
+        postResponse.setTotalElements(postsByPage.getTotalElements());
+        postResponse.setTotalPages(postsByPage.getTotalPages());
+        return postResponse;
     }
 
     @Override
@@ -86,7 +106,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostDTO> searchPosts(String keyword) {
-        return null;
+        return this.postRepository.findByTitleContainingIgnoreCase(keyword).stream().map(this::postToDto).collect(Collectors.toList());
     }
 
     private Post dtoToPost(PostDTO postDTO) {

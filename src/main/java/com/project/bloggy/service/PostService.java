@@ -1,6 +1,7 @@
 package com.project.bloggy.service;
 
 import com.project.bloggy.dto.PostDTO;
+import com.project.bloggy.dto.PostResponse;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface PostService {
 
     void deletePost(Long postId);
 
-    List<PostDTO> getAllPosts();
+    PostResponse getAllPosts(Integer pageNumber, Integer pageSize, String sortBy, String sortType);
 
     PostDTO getPostById(Long postId);
 
